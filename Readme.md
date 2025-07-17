@@ -20,4 +20,5 @@ Images from  [ThomasIdgeo\svg_ressources_idgeo](https://github.com/ThomasIdgeo/s
 
 ## Usage
 
-Description d'une stack d'exemple.
+> [!IMPORTANT]
+> Description d'une stack d'exemple.
