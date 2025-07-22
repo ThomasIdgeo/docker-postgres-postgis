@@ -6,6 +6,8 @@ ENV POSTGRES_VERSION=16.9 \
     POSTGIS_VERSION=3.5.3 \
     PGROUTING_VERSION=3.6.0 \
     PGUSER=pguser \
+    POSTGRES_DB=postgres \
+    POSTGRES_PASSWORD=achanger \
     PGDATA=/var/lib/postgresql/data
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -18,8 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo vim tini && \
     rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -r postgres && useradd -r -g postgres postgres && \
-    mkdir -p /var/lib/postgresql && chown -R postgres:postgres /var/lib/postgresql
+RUN groupadd -r $PGUSER && useradd -r -g $PGUSER $PGUSER && \
+    mkdir -p $PGDATA && chown -R $PGUSER:$PGUSER /var/lib/postgresql
 
 # Compiler PostgreSQL
 WORKDIR /usr/src
@@ -46,12 +48,26 @@ RUN git clone --branch v${PGROUTING_VERSION} https://github.com/pgRouting/pgrout
     cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local/pgsql .. && \
     make -j$(nproc) && make install
 
-RUN mkdir -p /docker-entrypoint-initdb.d && chown -R postgres:postgres /docker-entrypoint-initdb.d
+# Création des répertoires avec les bonnes permissions
+RUN mkdir -p /docker-entrypoint-initdb.d && \ 
+    mkdir -p /var/run/postgresql && \    
+    chown -R $PGUSER:$PGUSER /docker-entrypoint-initdb.d && \
+    chown -R $PGUSER:$PGUSER /var/run/postgresql && \
+    chown -R $PGUSER:$PGUSER $PGDATA
 
+# Copie des scripts
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    chown $PGUSER:$PGUSER /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 5444
+# Nettoyer les sources pour réduire la taille de l'image
+WORKDIR /
+RUN rm -rf /usr/src/*
 
-ENTRYPOINT ["tini", "--", "docker-entrypoint.sh"]
+EXPOSE 5432
+
+# Changer vers l'utilisateur pguser AVANT l'entrypoint
+USER $PGUSER
+
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["postgres"]
