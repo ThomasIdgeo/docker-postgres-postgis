@@ -29,7 +29,14 @@ RUN wget https://ftp.postgresql.org/pub/source/v${POSTGRES_VERSION}/postgresql-$
     tar -xf postgresql-${POSTGRES_VERSION}.tar.gz && \
     cd postgresql-${POSTGRES_VERSION} && \
     ./configure --prefix=/usr/local/pgsql --with-openssl && \
-    make -j$(nproc) && make install
+    make -j$(nproc) && make install && \
+    cd contrib && \
+    make && make install && \
+    echo "=== Vérification hstore ===" && \
+    ls -la hstore/ && \
+    cd hstore && \
+    make && \
+    make install
 
 ENV PATH="/usr/local/pgsql/bin:${PATH}"
 
