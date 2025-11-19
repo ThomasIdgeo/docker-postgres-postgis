@@ -54,7 +54,8 @@ ENV PATH="/usr/local/pgsql/bin:${PATH}"
 #################################
 # Création utilisateur postgres #
 #################################
-RUN useradd -m -d /var/lib/postgresql postgres && \
+RUN groupadd -r postgres && \
+    useradd -r -g postgres -d /var/lib/postgresql -s /bin/bash postgres && \
     mkdir -p "$PGDATA" && \
     chown -R postgres:postgres /var/lib/postgresql
 
