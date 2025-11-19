@@ -51,6 +51,13 @@ RUN wget https://ftp.postgresql.org/pub/source/v${POSTGRES_VERSION}/postgresql-$
 
 ENV PATH="/usr/local/pgsql/bin:${PATH}"
 
+#################################
+# Création utilisateur postgres #
+#################################
+RUN useradd -m -d /var/lib/postgresql postgres && \
+    mkdir -p "$PGDATA" && \
+    chown -R postgres:postgres /var/lib/postgresql
+
 ######################
 ## Compiler PostGIS ##
 ######################
