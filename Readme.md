@@ -28,7 +28,7 @@ Images from  [ThomasIdgeo\svg_ressources_idgeo](https://github.com/ThomasIdgeo/s
   
 2- Il faut créer une arborescence pour la composition.
 
-Création du volume bindé pour avoir les fichier de conf et data à ce même niveau. `pgdata/` et attribuer les permissions.
+Création du volume bindé pour avoir les fichiers de conf et data à ce même niveau. `pgdata/` et attribuer les permissions.
 
 ```bash
 mkdir -p pgdata/ && \
@@ -50,7 +50,7 @@ mv docker-entrypoint.sh initdb/
 ```yaml
 services:
   db:
-    image: thomasidgeo/idgeo-postgis:16.3.3
+    image: thomasidgeo/idgeo-postgis:17.3.6
 
     container_name: postgis_idgeo
     restart: always
