@@ -4,7 +4,6 @@ set -e
 # Vérifier que nous ne sommes pas root
 if [ "$(id -u)" = '0' ]; then
     echo "ERREUR: Ce script ne doit pas être exécuté en tant que root"
-    echo "PostgreSQL refuse de démarrer avec l'utilisateur root pour des raisons de sécurité"
     exit 1
 fi
 
@@ -13,18 +12,12 @@ log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
 }
 
-# Variables d'environnement par défaut
-PGUSER="${PGUSER:-postgres}"
-POSTGRES_DB="${POSTGRES_DB:-postgres}"
-POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-achanger}"
-PGDATA="${PGDATA:-/var/lib/postgresql/data}"
-
-# Vérifier si PostgreSQL est déjà initialisé
-if [ ! -s "$PGDATA/PG_VERSION" ]; then
-    log "Initialisation de PostgreSQL..."
+# Initialisation du cluster
+if [ ! -d "$PGDATA/base" ]; then
+    log "Initialisation de PostgreSQL avec locale FR ..."
     
     # Initialiser la base de données
-    initdb -D "$PGDATA" --username="$PGUSER" --pwfile=<(echo "$POSTGRES_PASSWORD") --auth-local=trust --auth-host=md5
+    initdb --encoding=UTF8 --locale=fr_FR.UTF-8 -D "$PGDATA"
     
     # Configurer postgresql.conf
     echo "listen_addresses = '*'" >> "$PGDATA/postgresql.conf"
@@ -45,16 +38,13 @@ if [ ! -s "$PGDATA/PG_VERSION" ]; then
         echo "host    all             all             0.0.0.0/0               md5"
     } > "$PGDATA/pg_hba.conf"
     
-    log "Démarrage temporaire de PostgreSQL pour l'initialisation..."
-    pg_ctl -D "$PGDATA" -o "-c listen_addresses=''" -w start
-    
     # Créer la base de données par défaut si nécessaire
     if [ "$POSTGRES_DB" != "postgres" ]; then
         log "Création de la base de données: $POSTGRES_DB"
         createdb "$POSTGRES_DB"
     fi
     
-    # Exécuter les scripts d'initialisation
+    # Exécuter les "autres" scripts d'initialisation
     if [ -d /docker-entrypoint-initdb.d ]; then
         for f in /docker-entrypoint-initdb.d/*; do
             case "$f" in
@@ -84,7 +74,7 @@ if [ ! -s "$PGDATA/PG_VERSION" ]; then
     
     # Créer les extensions PostGIS et pgRouting
     log "Création des extensions PostGIS et pgRouting..."
-    psql -v ON_ERROR_STOP=1 --username "$PGUSER" --dbname "$POSTGRES_DB" <<-EOSQL
+    psql -v ON_ERROR_STOP=1 <<-EOSQL
         CREATE EXTENSION IF NOT EXISTS postgis;
         CREATE EXTENSION IF NOT EXISTS postgis_topology;
         CREATE EXTENSION IF NOT EXISTS pgrouting;

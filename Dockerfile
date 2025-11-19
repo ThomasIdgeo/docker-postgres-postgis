@@ -7,8 +7,19 @@ LABEL maintainer="Thomas Michel <thomas.michel@idgeo.fr>"
 ENV POSTGRES_VERSION=17.7 \
     POSTGIS_VERSION=3.6.0 \
     PGROUTING_VERSION=4.0.0 \
-    PGDATA=/var/lib/postgresql/data
+    PGDATA=/var/lib/postgresql/data \
+    LANG=fr_FR.UTF-8 \
+    LANGUAGE=fr_FR:fr \
+    LC_ALL=fr_FR.UTF-8
 
+# Prise en compte locale fr
+RUN apt-get update && apt-get install -y --no-install-recommends locales && \
+    sed -i 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
+    locale-gen fr_FR.UTF-8 && \
+    update-locale LANG=fr_FR.UTF-8 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Les dépendances
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget curl gnupg lsb-release ca-certificates \
     build-essential libreadline-dev zlib1g-dev flex bison \
@@ -75,6 +86,9 @@ RUN git clone https://github.com/pramsey/pgsql-ogr-fdw.git && \
     cd pgsql-ogr-fdw && \
     make -j$(nproc) && make install
 
+# Nettoyer les sources pour réduire la taille de l'image
+RUN rm -rf /usr/src/*
+
 # Création des répertoires avec les bonnes permissions
 RUN mkdir -p /docker-entrypoint-initdb.d && \ 
     mkdir -p /var/run/postgresql
@@ -83,10 +97,9 @@ RUN mkdir -p /docker-entrypoint-initdb.d && \
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Nettoyer les sources pour réduire la taille de l'image
-RUN rm -rf /usr/src/*
-
 EXPOSE 5432
+
+USER postgres
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["postgres"]

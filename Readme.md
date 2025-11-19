@@ -32,7 +32,7 @@ Création du volume bindé pour avoir les fichiers de conf et data à ce même n
 
 ```bash
 mkdir -p pgdata/ && \
-sudo chown 999:999 pgdata/
+sudo chown -R 999:999 pgdata/
 ```
 
 Il faut maintenant créer le dossier initdb dans lequel il faudra enregistrer le docker-entrypoint.sh + d'autre fichier de conf si vous désriez.
