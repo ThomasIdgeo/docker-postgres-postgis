@@ -14,7 +14,7 @@ log() {
 }
 
 # Variables d'environnement par défaut
-PGUSER="${PGUSER:-pguser}"
+PGUSER="${PGUSER:-postgres}"
 POSTGRES_DB="${POSTGRES_DB:-postgres}"
 POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-achanger}"
 PGDATA="${PGDATA:-/var/lib/postgresql/data}"
@@ -88,6 +88,10 @@ if [ ! -s "$PGDATA/PG_VERSION" ]; then
         CREATE EXTENSION IF NOT EXISTS postgis;
         CREATE EXTENSION IF NOT EXISTS postgis_topology;
         CREATE EXTENSION IF NOT EXISTS pgrouting;
+        CREATE EXTENSION IF NOT EXISTS hstore;
+        CREATE EXTENSION IF NOT EXISTS ogr_fdw;
+        CREATE EXTENSION IF NOT EXISTS postgres_fdw;
+        CREATE EXTENSION IF NOT EXISTS pointcloud;
 EOSQL
     
     log "Arrêt du serveur temporaire..."
