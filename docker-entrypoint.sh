@@ -114,4 +114,9 @@ fi
 # Lancement final de PostgreSQL  #
 # ------------------------------ #
 echo "$(date) Lancement PostgreSQL…"
-exec "$POSTGRES" -D "$PGDATA" "$@"
+
+# arguments à zapper
+if [ "$1" = "postgres" ]; then
+    shift
+fi
+exec "$POSTGRES" -D "$PGDATA"
