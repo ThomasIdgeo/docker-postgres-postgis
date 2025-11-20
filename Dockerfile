@@ -12,14 +12,20 @@ ENV POSTGRES_VERSION=17.7 \
     LANGUAGE=fr_FR:fr \
     LC_ALL=fr_FR.UTF-8
 
-# Prise en compte locale fr
+#########################################
+# Locale FR
+#########################################
+
 RUN apt-get update && apt-get install -y --no-install-recommends locales && \
     sed -i 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen fr_FR.UTF-8 && \
     update-locale LANG=fr_FR.UTF-8 && \
     rm -rf /var/lib/apt/lists/*
 
-# Les dépendances
+#########################################
+# Dépendances build
+#########################################
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget curl gnupg lsb-release ca-certificates \
     build-essential libreadline-dev zlib1g-dev flex bison \
@@ -36,6 +42,7 @@ WORKDIR /usr/src
 #########################
 ## Compiler PostgreSQL ##
 #########################
+
 RUN wget https://ftp.postgresql.org/pub/source/v${POSTGRES_VERSION}/postgresql-${POSTGRES_VERSION}.tar.gz && \
     tar -xf postgresql-${POSTGRES_VERSION}.tar.gz && \
     cd postgresql-${POSTGRES_VERSION} && \
@@ -54,6 +61,7 @@ ENV PATH="/usr/local/pgsql/bin:${PATH}"
 #################################
 # Création utilisateur postgres #
 #################################
+
 RUN groupadd -r postgres && \
     useradd -r -g postgres -d /var/lib/postgresql -s /bin/bash postgres && \
     mkdir -p "$PGDATA" && \
@@ -62,6 +70,7 @@ RUN groupadd -r postgres && \
 ######################
 ## Compiler PostGIS ##
 ######################
+
 RUN wget https://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.tar.gz && \
     tar -xf postgis-${POSTGIS_VERSION}.tar.gz && \
     cd postgis-${POSTGIS_VERSION} && \
@@ -71,16 +80,17 @@ RUN wget https://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.ta
 ########################
 ## Compiler pgRouting ##
 ########################
+
 RUN git clone --branch v${PGROUTING_VERSION} https://github.com/pgRouting/pgrouting.git && \
     cd pgrouting && \
-    mkdir build && \
-    cd build && \
+    mkdir build && cd build && \
     cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local/pgsql .. && \
     make -j$(nproc) && make install
 
 #########################
 ## Compiler Pointcloud ##
 #########################
+
 RUN git clone https://github.com/pgpointcloud/pointcloud.git && \
     cd pointcloud && \
     ./autogen.sh && \
@@ -90,18 +100,25 @@ RUN git clone https://github.com/pgpointcloud/pointcloud.git && \
 ######################
 ## Compiler ogr_fdw ##
 ######################
+
 RUN git clone https://github.com/pramsey/pgsql-ogr-fdw.git && \
     cd pgsql-ogr-fdw && \
     make -j$(nproc) && make install
 
-# Nettoyer les sources pour réduire la taille de l'image
+#########################################
+###       Nettoyage des sources       ### 
+#########################################
+
 RUN rm -rf /usr/src/*
 
-# Création des répertoires avec les bonnes permissions
-RUN mkdir -p /docker-entrypoint-initdb.d && \ 
-    mkdir -p /var/run/postgresql
+#########################################
+### Répertoires config + permissions  ###
+#########################################
 
-# Copie des scripts
+RUN mkdir -p /docker-entrypoint-initdb.d && \
+    mkdir -p /var/run/postgresql && \
+    chown -R postgres:postgres /var/run/postgresql
+
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
