@@ -18,7 +18,7 @@ Une image maison qui embarque PostgreSQL, PostGIS et Pgrouting
 
 Images from  [ThomasIdgeo\svg_ressources_idgeo](https://github.com/ThomasIdgeo/svg_ressources_idgeo/) 
 
-## Usage
+## Usages
 
 > [!IMPORTANT]
 > Description d'une stack d'exemple.
@@ -79,6 +79,15 @@ networks:
 volumes:
   pgdata:
 ```
+### 4- Les conf du serveur
+
+> [!IMPORTANT]
+> Il est indispensable de variabiliser certains éléments ...
+
+>[!WARNING]
+> Il est recommandé aussi d'ajuster les fichiers de configurations postgresql.conf (listenadress notament) et pg_hab.conf 
+
+N'oublions pas de configurer notre base template et des rôles adaptés à nos besoins.
 
 Voili Voilou
 
