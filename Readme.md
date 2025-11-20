@@ -24,9 +24,13 @@ Images from  [ThomasIdgeo\svg_ressources_idgeo](https://github.com/ThomasIdgeo/s
 > Description d'une stack d'exemple.
 > Suivre les étapes pour lancer la composition.
 
-1- faire un git clone à l'endroit qui vous va bien (sur un serveur à priori).
+### 1- Cloner le repo 
+
+Faire un git clone à l'endroit qui vous va bien (sur un serveur à priori).
   
-2- Il faut créer une arborescence pour la composition.
+### 2- Création de l'arborescence
+
+Il faut créer une arborescence pour la composition.
 
 Création du volume bindé pour avoir les fichiers de conf et data à ce même niveau. `pgdata/` et attribuer les permissions.
 
@@ -35,35 +39,37 @@ mkdir -p pgdata/ && \
 sudo chown -R 999:999 pgdata/
 ```
 
-Il faut maintenant créer le dossier initdb dans lequel il faudra enregistrer le docker-entrypoint.sh + d'autre fichier de conf si vous désriez.
+Il faut maintenant créer le dossier initdb dans lequel il faudra enregistrer le docker-entrypoint.sh avec le `mv` et enfin le rendre exécutable `chmod +x`.
 
 ```bash
 mkdir initdb && \
-mv docker-entrypoint.sh initdb/
+mv docker-entrypoint.sh initdb/  && \ 
+sudo chmod +x initdb/docker-entrypoint.sh
 ```
+
+### 3- Le docker-compose.yml
 
 >[!WARNING]
 > Il faut modifier le "achanger" pour le mot de passe de l'utilisateur du serveur.
 > 
-3- Le docker-compose.yml
+
 
 ```yaml
 services:
   db:
     image: thomasidgeo/idgeo-postgis:17.3.6
-
-    container_name: postgis_idgeo
+    container_name: postgis_idgeo # peut-être modifié
     restart: always
     environment:
-      POSTGRES_USER: pguser
-      POSTGRES_PASSWORD: achanger
+      POSTGRES_USER: pguser # Personnalisable
+      POSTGRES_PASSWORD: achanger # Personnalisable
       POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/
     volumes:
       - ./pgdata:/var/lib/postgresql/data/
       - ./initdb:/docker-entrypoint-initdb.d
     ports:
-      - "5432:5432"
+      - "5432:5432" # Personnalisable
     networks:
       - backend
 
@@ -73,4 +79,15 @@ networks:
 volumes:
   pgdata:
 ```
+
 Voili Voilou
+
+----------
+
+Ce projet utilise les logiciels suivants
+
+- PostreSQL (PostgreSQL License)
+- PostGIS (GPL v2)
+- pgRouting (GPLv2)
+
+Cette composition Docker est distribuée sous licence MIT
