@@ -128,4 +128,4 @@ EXPOSE 5432
 USER postgres
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["postgres"]
+CMD [""]

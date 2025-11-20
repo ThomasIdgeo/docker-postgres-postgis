@@ -113,5 +113,5 @@ fi
 # ------------------------------ #
 # Lancement final de PostgreSQL  #
 # ------------------------------ #
-echo "Lancement PostgreSQL…"
-exec $POSTGRES "$@"
+echo "$(date) Lancement PostgreSQL…"
+exec "$POSTGRES" -D "$PGDATA" "$@"
