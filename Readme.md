@@ -1,4 +1,4 @@
-# Image Docker PostgreSQL / PostGIS / Pgrouting
+# Composition Docker PostgreSQL / PostGIS / Pgrouting
 
 ## Description
 
@@ -50,7 +50,7 @@ sudo chmod +x initdb/docker-entrypoint.sh
 ### 3- Le docker-compose.yml
 
 >[!WARNING]
-> Il faut modifier le "achanger" pour le mot de passe de l'utilisateur du serveur.
+> Il faut modifier le "achanger" pour le mot de passe de l'utilisateur du serveur et les options personnalisables.
 > 
 
 
@@ -84,10 +84,10 @@ Voili Voilou
 
 ----------
 
-Ce projet utilise les logiciels suivants
+Ce projet utilise les logiciels suivants :
 
 - PostreSQL (PostgreSQL License)
 - PostGIS (GPL v2)
 - pgRouting (GPLv2)
 
-Cette composition Docker est distribuée sous licence MIT
+Cette composition Docker est distribuée sous licence MIT.
