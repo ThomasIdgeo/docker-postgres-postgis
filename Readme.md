@@ -57,7 +57,7 @@ sudo chmod +x initdb/docker-entrypoint.sh
 ```yaml
 services:
   db:
-    image: thomasidgeo/idgeo-postgis:17.3.6
+    image: thomasidgeo/idgeo-postgis:16.3.3
     container_name: postgis_idgeo # peut-être modifié
     restart: always
     environment:

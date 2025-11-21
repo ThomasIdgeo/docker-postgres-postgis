@@ -1,12 +1,12 @@
 FROM debian:trixie
 LABEL maintainer="Thomas Michel <thomas.michel@idgeo.fr>"
 
-# Options variables personnalisables
-# Note des versions : https://postgis.net/documentation/getting_started/install_windows/released_versions/
+# Options variables personnalisables, basée ici sur les dernières releases
+# Note des versions : https://trac.osgeo.org/postgis/wiki/UsersWikiPostgreSQLPostGIS
 
-ENV POSTGRES_VERSION=17.7 \
-    POSTGIS_VERSION=3.6.0 \
-    PGROUTING_VERSION=4.0.0 \
+ENV POSTGRES_VERSION=16.11 \
+    POSTGIS_VERSION=3.3.8 \
+    PGROUTING_VERSION=3.7.3 \
     PGDATA=/var/lib/postgresql/data \
     LANG=fr_FR.UTF-8 \
     LANGUAGE=fr_FR:fr \
