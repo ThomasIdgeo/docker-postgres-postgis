@@ -36,13 +36,14 @@ Faire un git clone à l'endroit qui vous va bien (sur un serveur à priori).
 
 Il faut créer une arborescence pour la composition.
 
-Création du volume bindé pour avoir les fichiers de conf et data à ce même niveau. `pgdata/` et attribuer les permissions.
+- Création du volume bindé pour avoir les fichiers de conf et data à ce même niveau. `pgdata/` et attribuer les permissions.
 
 ```bash
+sudo mkdir pgdata \ &&
 sudo chown -R 999:999 pgdata
 ```
 
-On rend le fichier init-env.sh et docker-entrypoint.sh exécutable `chmod +x`.
+- On rend le fichier init-env.sh et docker-entrypoint.sh exécutable `chmod +x`.
 
 ```bash
 sudo chmod +x init-scripts/init-env.sh && \
@@ -70,10 +71,10 @@ sudo docker compose up --build -d
 ### 5- Les conf du serveur
 
 >[!IMPORTANT]
-> Il est indispensable de variabiliser certains éléments ...
+> Il est recommandé de variabiliser certains éléments ...
 
 >[!WARNING]
-> Il est recommandé aussi d'ajuster les fichiers de configurations postgresql.conf (listenadress notament) et pg_hab.conf 
+> Il est aussi  recommandé d'ajuster les fichiers de configurations postgresql.conf (listenadress notament) et pg_hab.conf.
 
 N'oublions pas de configurer notre base template et des rôles adaptés à nos besoins.
 
