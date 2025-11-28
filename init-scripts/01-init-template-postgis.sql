@@ -18,7 +18,6 @@ END $$; */
 -- Extensions nécessaires
 CREATE EXTENSION postgis;
 CREATE EXTENSION postgis_topology;
-CREATE EXTENSION postgis_sfcgal;
 CREATE EXTENSION fuzzystrmatch;
 CREATE EXTENSION pg_trgm;
 CREATE EXTENSION hstore;
