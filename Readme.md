@@ -2,6 +2,10 @@
 
 ## Description
 
+> [!IMPORTANT]
+> La branche principale s'envisage pour une utilisation en dev.
+> Les branches supplémentaires permettent la construction des images docker.
+
 Idgeo compatible.
 
 <img src="https://github.com/ThomasIdgeo/svg_ressources_idgeo/blob/main/icons_png/Postgis_Logo_square.png?raw=true" width="150">
@@ -35,53 +39,37 @@ Il faut créer une arborescence pour la composition.
 Création du volume bindé pour avoir les fichiers de conf et data à ce même niveau. `pgdata/` et attribuer les permissions.
 
 ```bash
-mkdir -p pgdata/ && \
-sudo chown -R 999:999 pgdata/
+sudo chown -R 999:999 pgdata
 ```
 
-Il faut maintenant créer le dossier initdb dans lequel il faudra enregistrer le docker-entrypoint.sh avec le `mv` et enfin le rendre exécutable `chmod +x`.
+On rend le fichier init-env.sh et docker-entrypoint.sh exécutable `chmod +x`.
 
 ```bash
-mkdir initdb && \
-mv docker-entrypoint.sh initdb/  && \ 
-sudo chmod +x initdb/docker-entrypoint.sh
+sudo chmod +x init-scripts/init-env.sh && \
+sudo chmod +x init-scripts/docker-entrypoint.sh
 ```
 
-### 3- Le docker-compose.yml
+### 3- Derniers préparatifs
+
+1. Personnaliser le fichier intit-scripts/init-env.sh
+2. Exécuter le fichier intit-scripts/init-env.sh (en étant positionné dans le dosiier /init-scripts) sudo ./init-env.sh
+3. Lancer la composition (cf ci-dessous)
+4. Tester la connexion à la base avec les éléments trouvables dans le .env
+5. Création du template postgis avec le script sql init-scripts/01-init-template-postgis.sql (après une première connexion en superutilisateur)
+
+### 4- Le docker-compose.yml => Lancer la composition
 
 >[!WARNING]
-> Il faut modifier le "achanger" pour le mot de passe de l'utilisateur du serveur et les options personnalisables.
+> L'étape précédente permet de générer les variables d'environnment
 > 
 
-
 ```yaml
-services:
-  db:
-    image: thomasidgeo/idgeo-postgis:17.3.6
-    container_name: postgis_idgeo # peut-être modifié
-    restart: always
-    environment:
-      POSTGRES_USER: pguser # Personnalisable
-      POSTGRES_PASSWORD: achanger # Personnalisable
-      POSTGRES_DB: postgres
-      PGDATA: /var/lib/postgresql/data/
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data/
-      - ./initdb:/docker-entrypoint-initdb.d
-    ports:
-      - "5432:5432" # Personnalisable
-    networks:
-      - backend
-
-networks:
-  backend:
-
-volumes:
-  pgdata:
+sudo docker compose up --build -d
 ```
-### 4- Les conf du serveur
 
-> [!IMPORTANT]
+### 5- Les conf du serveur
+
+>[!IMPORTANT]
 > Il est indispensable de variabiliser certains éléments ...
 
 >[!WARNING]
