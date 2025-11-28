@@ -50,13 +50,13 @@ sudo chmod +x init-scripts/init-env.sh && \
 sudo chmod +x init-scripts/docker-entrypoint.sh
 ```
 
-### 3- Derniers préparatifs
+### 3- Derniers préparatifs -  Etape par étape
 
 1. Personnaliser le fichier intit-scripts/init-env.sh
-2. Exécuter le fichier intit-scripts/init-env.sh (en étant positionné dans le dosiier /init-scripts) sudo ./init-env.sh
+2. Exécuter le fichier intit-scripts/init-env.sh (en étant positionné dans le dosiier /init-scripts) ``sudo ./init-env.sh``
 3. Lancer la composition (cf ci-dessous)
-4. Tester la connexion à la base avec les éléments trouvables dans le .env
-5. Création du template postgis avec le script sql init-scripts/01-init-template-postgis.sql (après une première connexion en superutilisateur)
+4. Tester la connexion à la base avec les éléments trouvables dans le .env (en ayant modifier pg_hba et postgres.conf listen_adress)
+5. [*optionnel*] Création du template postgis avec le script sql init-scripts/01-init-template-postgis.sql (après une première connexion en superutilisateur)
 
 ### 4- Le docker-compose.yml => Lancer la composition
 
