@@ -8,19 +8,17 @@
 
 Idgeo compatible.
 
-<img src="https://github.com/ThomasIdgeo/svg_ressources_idgeo/blob/main/icons_png/Postgis_Logo_square.png?raw=true" width="150">
+<img src="https://github.com/ThomasIdgeo/svg_ressources_idgeo/blob/main/icons_png/Postgis_Logo_square.png?raw=true" width="80">
 
 Mention des versions ***Current best***
-
 [https://trac.osgeo.org/postgis/wiki/UsersWikiPostgreSQLPostGIS](https://trac.osgeo.org/postgis/wiki/UsersWikiPostgreSQLPostGIS)
 
 Une image maison qui embarque PostgreSQL, PostGIS et Pgrouting 
 
-<img src="https://github.com/ThomasIdgeo/svg_ressources_idgeo/blob/main/icons_png/postgresql-original.png?raw=true" width="150">
+<img src="https://github.com/ThomasIdgeo/svg_ressources_idgeo/blob/main/icons_png/postgresql-original.png?raw=true" width="75">
+<img src="https://github.com/ThomasIdgeo/svg_ressources_idgeo/blob/main/icons_png/pgrouting_logo.png?raw=true" width="75">
 
-<img src="https://github.com/ThomasIdgeo/svg_ressources_idgeo/blob/main/icons_png/pgrouting_logo.png?raw=true" width="150">
-
-Images from  [ThomasIdgeo\svg_ressources_idgeo](https://github.com/ThomasIdgeo/svg_ressources_idgeo/) 
+Images from  [ThomasIdgeo\svg_ressources_idgeo](https://github.com/ThomasIdgeo/svg_ressources_idgeo/)
 
 ## Usages
 
@@ -52,11 +50,12 @@ sudo chmod +x init-scripts/docker-entrypoint.sh
 
 ### 3- Derniers préparatifs -  Etape par étape
 
-1. Personnaliser le fichier intit-scripts/init-env.sh
-2. Exécuter le fichier intit-scripts/init-env.sh (en étant positionné dans le dosiier /init-scripts) ``sudo ./init-env.sh``
-3. Lancer la composition (cf ci-dessous)
-4. Tester la connexion à la base avec les éléments trouvables dans le .env (en ayant modifier pg_hba et postgres.conf listen_adress)
-5. [*optionnel*] Création du template postgis avec le script sql init-scripts/01-init-template-postgis.sql (après une première connexion en superutilisateur)
+1. Le script suivant va générer un fichier .env et généré de manière aléatoire un mot de passe pour un super-utilisateur du serveur. Il s'agit de personnaliser le fichier intit-scripts/init-env.sh 
+2. Se positionner dans le dossier init-scripts ``cd init-scripts`` 
+3. Exécuter le fichier intit-scripts/init-env.sh ``sudo ./init-env.sh``. Le fichier .env est généré dans le dossier parent.
+4. Lancer la composition (cf ci-dessous)
+5. Tester la connexion à la base avec les éléments trouvables dans le .env (en ayant modifier pg_hba et postgres.conf listen_adress)
+6. [*optionnel*] Création du template postgis avec le script sql init-scripts/01-init-template-postgis.sql (après une première connexion en superutilisateur)
 
 ### 4- Le docker-compose.yml => Lancer la composition
 
@@ -67,6 +66,18 @@ sudo chmod +x init-scripts/docker-entrypoint.sh
 ```yaml
 sudo docker compose up --build -d
 ```
+- On vérifie si le container apparait dans les processus docker
+
+```bash
+sudo docker compose ps
+```
+- On vérifie les logs
+
+```bash
+sudo docker compose logs -f -n 100
+```
+:white_check_mark: On doit voir : "[1] LOG:  database system is ready to accept connections"
+Et on peut se connecter avec son client préféré !
 
 ### 5- Les conf du serveur
 
