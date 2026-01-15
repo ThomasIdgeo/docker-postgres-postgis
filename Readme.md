@@ -50,7 +50,7 @@ sudo chmod +x init-scripts/docker-entrypoint.sh
 
 ### 3- Derniers préparatifs -  Etape par étape
 
-1. Le script suivant va générer un fichier .env et généré de manière aléatoire un mot de passe pour un super-utilisateur du serveur. Il s'agit de personnaliser le fichier intit-scripts/init-env.sh 
+1. Le script suivant va générer un fichier .env et généré de manière aléatoire un mot de passe pour un super-utilisateur du serveur. Il s'agit de personnaliser le fichier intit-scripts/init-env.sh et de changer le port évantuellement.
 2. Se positionner dans le dossier init-scripts ``cd init-scripts`` 
 3. Exécuter le fichier intit-scripts/init-env.sh ``sudo ./init-env.sh``. Le fichier .env est généré dans le dossier parent.
 4. Lancer la composition (cf ci-dessous)
@@ -85,9 +85,9 @@ Et on peut se connecter avec son client préféré !
 > Il est recommandé de variabiliser certains éléments ...
 
 >[!WARNING]
-> Il est aussi  recommandé d'ajuster les fichiers de configurations postgresql.conf (listenadress notament) et pg_hab.conf.
+> Il est aussi recommandé d'ajuster les fichiers de configurations postgresql.conf (listenadress notament et pgtune en fonction de la machine qui héberge) et pg_hab.conf (en fonction de votre réseau).
 
-N'oublions pas de configurer notre base template et des rôles adaptés à nos besoins.
+N'oublions pas de configurer notre base template et des rôles adaptés à nos besoins. Vous trouverez une série de commande pour créer une base template géo-compatible et un rôle "editeurs" jouant qui permet de gérer un profil convenable. Attention à suivre les indications des commentaires.
 
 Voili Voilou
 
